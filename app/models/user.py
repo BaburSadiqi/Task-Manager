@@ -7,7 +7,7 @@ class User(Base):
     __table_args__ = {'schema': 'public'}
 
     id = Column(BigInteger, Identity(), primary_key=True, index=True)
-    user_name = Column(String, index=True)
+    username = Column(String, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
