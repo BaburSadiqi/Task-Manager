@@ -22,17 +22,17 @@ def get_password_hash(password: str):
 @router.post("/register", response_model=UserOut)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
 
-    exiting_user = db.query(User).filter(User.user_name == user.username).first()
-    
-    if not exiting_user:
+    existing_user = db.query(User).filter(User.username == user.username).first()
+
+    if existing_user:
         raise HTTPException(status_code=400, detail="User already registered")
-    
-    hashed_passsword = get_password_hash(user.password)
+
+    hashed_password = get_password_hash(user.password)
 
     new_user = User(
         username=user.username,
         email=user.email,
-        hashed_password=hashed_passsword
+        hashed_password=hashed_password
     )
 
     db.add(new_user)
