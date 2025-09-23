@@ -14,6 +14,5 @@ class User(Base):
     is_active = Column(Boolean, default=True)
 
 
-    tasks = relationship("Task", back_populates="owner")
-
+    tasks = relationship("Task", back_populates="owner", cascade="all, delete-orphan")
 
