@@ -5,9 +5,10 @@ from app.schemas.task import TaskCreate, TaskOut
 from app.crud.task import create_task
 from app.models.user import User
 from app.authentication.dependencies import get_current_user
-from app.crud.task import get_tasks_by_user, update_task
+from app.crud.task import get_tasks_by_user, update_task, delete_task_by_user
 from typing import List
 from app.schemas.task import TaskUpdate
+
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
@@ -39,3 +40,13 @@ def update_tasks(
     if updated_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     return updated_task
+
+
+@router.delete("/{task_id}", response_model=dict)
+def delete_task(
+    task_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> dict:
+    
+    return delete_task_by_user(db, task_id, current_user.id)

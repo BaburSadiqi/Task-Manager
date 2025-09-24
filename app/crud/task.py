@@ -44,3 +44,14 @@ def update_task(db: Session, task_id: int, task_data: TaskUpdate, user_id: int):
     db.commit()
     db.refresh(task)
     return task
+
+def delete_task_by_user(db: Session, task_id: int, user_id: int):
+    task = db.query(Task).filter(Task.id == task_id, Task.owner_id == user_id).first()
+
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found or not authorized")
+
+    
+    db.delete(task)
+    db.commit()
+    return {"detail": "Task deleted seccessfully"}
