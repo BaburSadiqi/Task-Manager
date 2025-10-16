@@ -10,6 +10,8 @@ class PlaceStatus(str, enum.Enum):
     
     pending = "PENDING"
     in_progress = "IN_PROGRESS"
+    review = "REVIEW"
+    testing = "TESTING"
     completed = "COMPLETED"
     cancelled = "CANCELLED"
 
@@ -52,4 +54,3 @@ class TaskOut(BaseModel):
 
     class Config:
         orm_mode = True
-
