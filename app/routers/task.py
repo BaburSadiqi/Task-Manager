@@ -6,9 +6,10 @@ from app.crud.task import create_task
 from app.models.user import User
 from app.authentication.dependencies import get_current_user
 from app.crud.task import get_tasks_by_user, update_task, delete_task_by_user
-from typing import List
+from typing import List, Optional, Any
 from app.schemas.task import TaskUpdate
-
+from fastapi import Query
+from datetime import datetime
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
@@ -22,24 +23,33 @@ def create_new_task(
 
 @router.get("/get/tasks", response_model=List[TaskOut])
 def get_tasks(
+    status: Optional[str] = Query(None),
+    priority: Optional[str] = Query(None),
+    due_date: Optional[datetime] = Query(None),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    return get_tasks_by_user(db, current_user.id)
+    return get_tasks_by_user(
+        db, current_user.id,
+        status=status,
+        priority=priority,
+        due_date=due_date
+    )
 
 
-@router.put("/update/{task_id}")
+@router.put("/update/{task_id}", response_model=TaskOut)
 def update_tasks(
     task_id: int,
     task_data: TaskUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> TaskOut:
-    updated_task = update_task(db, task_id, task_data, current_user.id)
-
-    if updated_task is None:
-        raise HTTPException(status_code=404, detail="Task not found")
-    return updated_task
+) -> Any:
+    """
+    Update a task. Only the owner can update the task.
+    Status transitions are validated against workflow rules.
+    """
+    task = update_task(db, task_id, task_data, current_user.id)
+    return task
 
 
 @router.delete("/{task_id}", response_model=dict)
