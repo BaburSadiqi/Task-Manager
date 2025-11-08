@@ -7,9 +7,10 @@ from app.models.user import User
 from app.authentication.dependencies import get_current_user
 from app.crud.task import get_tasks_by_user, update_task, delete_task_by_user
 from typing import List, Optional, Any
-from app.schemas.task import TaskUpdate
+from app.schemas.task import TaskUpdate, AssignTaskUser
 from fastapi import Query
 from datetime import datetime
+from app.crud.task import assign_task_to_user
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
@@ -60,3 +61,14 @@ def delete_task(
 ) -> dict:
     
     return delete_task_by_user(db, task_id, current_user.id)
+
+
+@router.put("/{task_id}/assign", response_model=TaskOut)
+def assign_task_user(
+    task_id: int,
+    assign: AssignTaskUser,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+) -> TaskOut:
+    
+    return assign_task_to_user(db, task_id, assign.assigned_to, current_user.id)

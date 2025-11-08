@@ -5,6 +5,8 @@ from sqlalchemy import DateTime, func
 from sqlalchemy.orm import relationship
 from app.schemas.task import PlaceStatus, Priority
 from sqlalchemy import Enum
+from app.models.project import Project
+from app.models.user import User
 
 class Task(Base):
     __tablename__ = "tasks"
@@ -20,7 +22,9 @@ class Task(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
     owner_id = Column(BigInteger, ForeignKey("public.users.id"))
-    owner = relationship("User", back_populates="tasks")
-    project_id = Column(BigInteger, ForeignKey=("public.projects.id"))
-    project = relationship("Projects", back_populates="tasts")
+    owner = relationship("User", back_populates="tasks", foreign_keys=[owner_id])
+    project_id = Column(BigInteger, ForeignKey("public.projects.id"))
+    project = relationship("Project", back_populates="tasks")
+    assigned_to = Column(BigInteger, ForeignKey("public.users.id"), nullable=True)
+    assigned_user = relationship("User", foreign_keys=[assigned_to])
 

@@ -24,10 +24,19 @@ class ProjectOut(BaseModel):
     name: str
     description: Optional[str]
     owner_id: Optional[int] 
-    create_at: datetime
+    created_at: datetime
     updated_at: Optional[datetime] 
 
     class Config:
         orm_mode = True
 
 
+class ProjectResponse(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        orm_mode = True
