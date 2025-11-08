@@ -13,7 +13,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 if not DATABASE_URL:
-    DATABASE_URL = "postgresql://postgres:bab0786211141@localhost:5432/testing"
+    DATABASE_URL = "postgresql://postgres:0786211141@localhost:5432/test"
     print("Warning: DATABASE_URL not found in env file using hardcoded postgres URL")
 
 # Create the SQLAlchemy engine

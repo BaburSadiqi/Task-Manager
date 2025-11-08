@@ -30,6 +30,8 @@ class TaskCreate(BaseModel):
     description: Optional[str] = None
     priority: Optional[Priority] = Priority.medium
     due_date: Optional[datetime] = None
+    assigned_to: Optional[int] = None
+    project_id: Optional[int] = None
 
 
 class TaskUpdate(BaseModel):
@@ -38,6 +40,7 @@ class TaskUpdate(BaseModel):
     priority: Optional[Priority] = None
     due_date: Optional[datetime] = None
     status: Optional[PlaceStatus] = None
+    assigned_to: Optional[int] = None
 
 
 
@@ -51,6 +54,11 @@ class TaskOut(BaseModel):
     created_at: datetime
     updated_at: Optional[datetime] = None
     owner_id: int
+    assigned_to: Optional[int] = None
+    project_id: Optional[int] = None
 
     class Config:
         orm_mode = True
+
+class AssignTaskUser(BaseModel):
+    assigned_to: int
